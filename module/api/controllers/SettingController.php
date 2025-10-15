@@ -68,6 +68,7 @@ class SettingController extends BaseApiController
             $data['filterKey'],
             $data['liqPaySandbox'],
             $data['liqPayPublicKey'],
+            $data['adminEmailVacancy'],
             $data['liqPayPrivateKey'],
             $data['pizzaConstructorBannerImage']
         );

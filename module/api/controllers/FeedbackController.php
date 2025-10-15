@@ -109,6 +109,41 @@ class FeedbackController extends BaseApiController
             $model->lang_id = Language::getLanguageIdByCode($lang);
 
             if ($model->save(false)) {
+
+                $photoPath = $model->photo ? str_replace('\\', '/', $model->photo) : null;
+                $pathInfo = pathinfo($photoPath);
+                $filenameWithSize = $pathInfo['filename'] . '-180x180.' . $pathInfo['extension'];
+
+                $host = 'https://classic.devseonet.com';
+                $photoUrl = rtrim($host, '/') . '/image/cache/vacancy_requests/' . $pathInfo['dirname'] . '/' . $filenameWithSize;
+
+                $photoLink = "<a href=\"{$photoUrl}\" target=\"_blank\" style=\"color:#fff;background:#28a745;padding:6px 10px;border-radius:5px;text-decoration:none;\">Переглянути / Завантажити фото</a>";
+
+                $adminLink = "https://classic.devseonet.com/admin/vacancy-requests";
+
+                Yii::$app->mailer->compose()
+                    ->setTo(Yii::$app->params['adminEmailVacancy'])
+                    ->setFrom(['noreply@' . Yii::$app->request->serverName => 'Vacancy Bot'])
+                    ->setSubject('Нова заявка на вакансію')
+                    ->setHtmlBody("
+                    <h3>Нова заявка на вакансію</h3>
+                    <p><b>Ім'я:</b> {$model->full_name}</p>
+                    <p><b>Телефон:</b> {$model->phone}</p>
+                    <p><b>Email:</b> {$model->email}</p>
+                    <p><b>Вік:</b> {$model->age}</p>
+                    <p><b>Причина:</b> {$model->reason}</p>
+                    
+                    <p><b>Фото:</b> {$photoLink}</p>
+    
+                    <hr>
+                    <p>
+                        <a href='{$adminLink}' 
+                           style='display:inline-block;margin-top:10px;padding:10px 15px;background:#007BFF;color:#fff;text-decoration:none;border-radius:5px;'>
+                           Перейти в адмінку
+                        </a>
+                </p>
+                ")
+                    ->send();
                 return [
                     'status' => 'success',
                     'message' => Yii::t('vacancy', 'Дані успішно збережено.'),

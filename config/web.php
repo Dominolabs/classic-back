@@ -86,10 +86,10 @@ $config = [
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => 'smtp.gmail.com',
-                'username' => 'dominoit.agency@gmail.com',
-                'password' => 'fvbqdszjuynzyldw',
-                'port' => '465',
-                'encryption' => 'ssl',
+                'username' => 'username',
+                'password' => 'password',
+                'port' => '587',
+                'encryption' => 'tls',
             ],
         ],
         'log' => [

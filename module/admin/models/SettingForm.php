@@ -38,6 +38,7 @@ class SettingForm extends Model
 
     public $availableOnlinePay;
     public $liqPayPublicKey;
+    public $adminEmailVacancy;
     public $liqPayPrivateKey;
     public $liqPaySandbox;
     public $liqPaySendRRO;
@@ -107,6 +108,7 @@ class SettingForm extends Model
                     'webCamPassword',
                     'availableOnlinePay',
                     'liqPayPublicKey',
+                    'adminEmailVacancy',
                     'liqPayPrivateKey',
                     'notificationBirthDateBeforeWeek',
                     'notificationBirthDateBeforeDay',
@@ -170,6 +172,7 @@ class SettingForm extends Model
 
             'availableOnlinePay' => 'Доступна онлайн оплата',
             'liqPayPublicKey' => 'Публичный ключ',
+            'adminEmailVacancy' => 'Почта для вакансий',
             'liqPayPrivateKey' => 'Приватный ключ',
             'liqPaySandbox' => 'Тестовый режим оплаты (режим разработки)',
             'liqPaySendRRO' => 'Отправлять список товаров в LiqPay (для РРО)',

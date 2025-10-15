@@ -72,6 +72,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     <?= $form->field($model, 'webCamPassword')->textInput(['maxlength' => true]) ?>
 
+                    <?= $form->field($model, 'adminEmailVacancy')->textInput(['maxlength' => true]) ?>
+
                     <fieldset>
                         <legend>LiqPay</legend>
 
