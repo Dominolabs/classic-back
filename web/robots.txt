@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /admin
+Sitemap: https://mojo.lutsk.ua/sitemap.xml

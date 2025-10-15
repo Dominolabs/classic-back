@@ -1,0 +1,11 @@
+/.idea
+/node_modules
+/vendor
+.phpunit.result.cache
+tests/_output/*
+tests/_support/_generated
+config/params.inc
+config/design.inc
+config/db.php
+log/
+
