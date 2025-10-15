@@ -46,20 +46,12 @@ class VacancyRequestSearch extends VacancyRequest
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-        ]);
 
-
-        $dataProvider->setSort([
-            'attributes' => [
-                'vacancy_request_id',
-                'vacancyName' => [
-                    'asc' => ['tbl_vacancies_description.name' => SORT_ASC],
-                    'desc' => ['tbl_vacancies_description.name' => SORT_DESC],
-                    'label' => 'Название'
+            'sort' => [
+                'defaultOrder' => [
+                    'vacancy_request_id' => SORT_DESC,
                 ],
-                'created_at',
-                'updated_at',
-            ]
+            ],
         ]);
 
         $this->load($params);
