@@ -84,7 +84,6 @@ class ViberChat extends ActiveModel
         return $this->hasMany(ViberChatViberUser::class, ['viber_chat_id' => 'viber_chat_id'])
             ->select(ViberChatViberUser::tableName() . '.subscribed_at, ' . ViberChatViberUser::tableName() . '.unsubscribed_at');
     }
-
     public static function getChat($chat = null)
     {
         if (is_null($chat)) {
