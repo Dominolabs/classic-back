@@ -45,7 +45,7 @@ class VacancyRequestForm extends Model
     public function rules(): array
     {
         return [
-            [['vacancy_id', 'full_name', 'age', 'email', 'phone', 'reason', 'social_links'], 'required'],
+            [['vacancy_id', 'full_name', 'age', 'email', 'phone', 'reason', 'social_links', 'photoFile', 'reason'], 'required'],
             [['vacancy_id'], 'integer'],
             [['age'], 'integer', 'min' => 16, 'max' => 65],
             [['full_name', 'phone', 'email', 'social_links'],  'string', 'max' => 255],
