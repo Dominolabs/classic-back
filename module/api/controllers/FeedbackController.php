@@ -132,9 +132,8 @@ class FeedbackController extends BaseApiController
                     <p><b>Email:</b> {$model->email}</p>
                     <p><b>Вік:</b> {$model->age}</p>
                     <p><b>Причина:</b> {$model->reason}</p>
-                    
-                    <p><b>Фото:</b> {$photoLink}</p>
-    
+                    <p><b>Соціальні мережі:</b> {$model->social_links}</p>
+                        
                     <hr>
                     <p>
                         <a href='{$adminLink}' 
