@@ -29,18 +29,37 @@ use yii\widgets\ActiveForm;
        <?= $form->field($model, 'vacancy_id')->dropDownList(Vacancy::getListWithNames($model->lang_id))->label('Вакансия')  ?>
 
        <div class="form-group field-user-avatar">
-           <?= Html::label($model->getAttributeLabel('photo'), 'input-file-avatar', ['class' => 'control-label', 'style' => 'display: block;']) ?>
+           <?= Html::label($model->getAttributeLabel('photo'), 'input-file-avatar', [
+               'class' => 'control-label',
+               'style' => 'display: block;'
+           ]) ?>
 
            <div class="img-thumbnail"
                 style="width: 200px; height: 200px; display: flex; align-items: center; justify-content: center;">
-              <?php if(isset($model->photo)): ?>
-               <img src="<?= $model->resizeImage($model->photo, 180, 180) ?>" alt="" title="" class="image-thumbnail"
-                    style="max-width: 100%; max-height: 100%;" data-placeholder=""/>
-              <?php else: ?>
-                 <img src="<?= $model->resizeImage($placeholder, 180, 180) ?>" alt="" title="" class="image-thumbnail"
-                      style="max-width: 100%; max-height: 100%;" data-placeholder=""/>
-              <?php endif; ?>
+               <?php if ($model->photo): ?>
+                   <img src="<?= $model->resizeImage($model->photo, 180, 180) ?>"
+                        alt=""
+                        title=""
+                        class="image-thumbnail"
+                        style="max-width: 100%; max-height: 100%;"/>
+               <?php else: ?>
+                   <img src="<?= $model->resizeImage($placeholder, 180, 180) ?>"
+                        alt=""
+                        title=""
+                        class="image-thumbnail"
+                        style="max-width: 100%; max-height: 100%;"/>
+               <?php endif; ?>
            </div>
+
+           <?php if ($model->photo): ?>
+               <div style="margin-top: 10px;">
+                   <?= Html::a('⬇️ Скачать оригинал', $model->getImageUrl($model->photo, 600, 600), [
+                       'class' => 'btn btn-primary btn-sm',
+                       'target' => '_blank',
+                       'download' => true
+                   ]) ?>
+               </div>
+           <?php endif; ?>
 
            <input type="hidden" name="VacancyRequest[photo]" value="<?= $model->photo ?>" id="input-avatar"/>
        </div>

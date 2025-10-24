@@ -8,6 +8,7 @@ namespace app\module\admin\models;
 
 use app\components\ImageBehavior;
 use yii\behaviors\TimestampBehavior;
+use Imagine\Image\ManipulatorInterface;
 use yii\db\Query;
 use Yii;
 
@@ -93,6 +94,15 @@ class VacancyRequest extends \yii\db\ActiveRecord
 
 
 
+    public static function getImageUrl(
+        $filename,
+        $width,
+        $height,
+        $mode = ManipulatorInterface::THUMBNAIL_OUTBOUND,
+        $quality = 100
+    ) {
+        return (new self())->resizeImage($filename, $width, $height, $mode, $quality);
+    }
 
 
     /**
