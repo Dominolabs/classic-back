@@ -125,8 +125,8 @@ class OrderForm extends Model
         $end = explode(':', substr($deliveryTime, 5, 5));
 
 
-        $start = Carbon::today('GMT+3')->addHours((int)($start[0] ?? 0))->addMinutes((int)($start[1] ?? 0));
-        $end = Carbon::today('GMT+3')->addHours((int)($end[0] ?? 0))->addMinutes((int)($end[1] ?? 0));
+        $start = Carbon::today('GMT+2')->addHours((int)($start[0] ?? 0))->addMinutes((int)($start[1] ?? 0));
+        $end = Carbon::today('GMT+2')->addHours((int)($end[0] ?? 0))->addMinutes((int)($end[1] ?? 0));
 
         if ($time->diffInMinutes($end, false) < 0 || $start->diffInMinutes($time, false) < 0) {
             $this->addError($attribute, Yii::t('order', 'Можливий час доставки / самовивозу замовлення з {from} до {to} за Київським часом.', [

@@ -655,7 +655,7 @@ class Order extends ActiveRecord
             $time = Carbon::createFromTimestamp($this->$attribute);
             if (!empty(Yii::$app->params['deliveryDuration'])) {
                 $minTime = Carbon::now()->addMinutes((int) (preg_replace('/[^0-9]/', '', Yii::$app->params['deliveryDuration'])));
-                $minTime = Carbon::today('GMT+3')->addHours($minTime->format('H'))->addMinutes($minTime->format('m'));
+                $minTime = Carbon::today('GMT+2')->addHours($minTime->format('H'))->addMinutes($minTime->format('m'));
                 if ($minTime->diffInMinutes($time, false) < 0) {
                     $this->addError($attribute, T::t('validation', "Time cannot be earlier than today ") . $minTime->toTimeString());
                     return;

@@ -119,7 +119,7 @@ class OrderController extends Controller
 //            $offsetInSeconds = $timezone->getOffset($dateTime);
 //            $offsetInHours = $offsetInSeconds / 3600;
 
-            $time = Carbon::parse($model->time)->addHours(-3);
+            $time = Carbon::parse($model->time)->addHours(-2);
             $model->time = strtotime($time);
             if ($model->save()) {
                 return $this->goBack();
