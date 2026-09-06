@@ -12,6 +12,7 @@ use yii\grid\GridView;
 $this->title = 'Вакансии (заявки)';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
 <div class="banner-index box box-primary">
    <div class="box-body table-responsive">
        <?= GridView::widget([
