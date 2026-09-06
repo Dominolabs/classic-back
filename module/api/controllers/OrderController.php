@@ -103,9 +103,9 @@ class OrderController extends BaseApiController
                 $transaction->commit();
 
 
-                Yii::$app->queue->push(new SendNewOrderEmailJob([
-                    'order_id' => $order->order_id
-                ]));
+//                Yii::$app->queue->push(new SendNewOrderEmailJob([
+//                    'order_id' => $order->order_id
+//                ]));
 
                 $this->broadcastOnViber($order);
 
