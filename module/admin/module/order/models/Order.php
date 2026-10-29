@@ -652,12 +652,17 @@ class Order extends ActiveRecord
         }
 
         if ($this->delivery_type === static::DELIVERY_TYPE_ADDRESS) {
-            $time = Carbon::createFromTimestamp($this->$attribute);
-            if (!empty(Yii::$app->params['deliveryDuration'])) {
-                $minTime = Carbon::now()->addMinutes((int) (preg_replace('/[^0-9]/', '', Yii::$app->params['deliveryDuration'])));
-                $minTime = Carbon::today('GMT+2')->addHours($minTime->format('H'))->addMinutes($minTime->format('m'));
-                if ($minTime->diffInMinutes($time, false) < 0) {
-                    $this->addError($attribute, T::t('validation', "Time cannot be earlier than today ") . $minTime->toTimeString());
+            $time = Carbon::createFromTimestamp($this->$attribute, 'Europe/Kyiv');
+            $duration = Yii::$app->params['deliveryDuration'] ?? '';
+            if (is_array($duration)) {
+                $duration = $duration[1] ?? (reset($duration) ?: '');
+            }
+            $minutes = (int) preg_replace('/[^0-9]/', '', (string) $duration);
+
+            if ($minutes > 0) {
+                $minTime = Carbon::now('Europe/Kyiv')->addMinutes($minutes);
+                if ($time->lt($minTime)) {
+                    $this->addError($attribute, T::t('validation', "Time cannot be earlier than today ") . $minTime->format('H:i'));
                     return;
                 }
             }
