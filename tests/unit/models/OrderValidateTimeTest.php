@@ -93,48 +93,26 @@ class OrderValidateTimeTest extends \Codeception\Test\Unit
         $winter = '2026-11-16';
         $address = Order::DELIVERY_TYPE_ADDRESS;
         $pickup = Order::DELIVERY_TYPE_SELF_PICKING;
-        $cooking45 = ['minCookingTime' => 45];
 
         return [
-            // now 10:02 + 45 min -> minimum 10:47 Kyiv, in both UTC+3 and UTC+2
-            'summer: before minimum' => ["$summer 10:02", $address, $cooking45, "$summer 10:46", '10:47'],
-            'summer: exactly minimum' => ["$summer 10:02", $address, $cooking45, "$summer 10:47", null],
-            'summer: reported 10:55' => ["$summer 10:02", $address, $cooking45, "$summer 10:55", null],
-            'winter: before minimum' => ["$winter 10:02", $address, $cooking45, "$winter 10:46", '10:47'],
-            'winter: exactly minimum' => ["$winter 10:02", $address, $cooking45, "$winter 10:47", null],
-            'winter: reported 10:55' => ["$winter 10:02", $address, $cooking45, "$winter 10:55", null],
+            // delivery by address: not earlier than now + 1 min, in both UTC+3 and UTC+2
+            'summer: current minute' => ["$summer 10:02", $address, [], "$summer 10:02", '10:03'],
+            'summer: next minute' => ["$summer 10:02", $address, [], "$summer 10:03", null],
+            'summer: reported 10:55' => ["$summer 10:02", $address, [], "$summer 10:55", null],
+            'winter: current minute' => ["$winter 10:02", $address, [], "$winter 10:02", '10:03'],
+            'winter: next minute' => ["$winter 10:02", $address, [], "$winter 10:03", null],
+            'winter: reported 10:55' => ["$winter 10:02", $address, [], "$winter 10:55", null],
 
-            // now 10:50 + 45 min -> minimum 11:35 (crosses the hour)
-            'hour rollover: before minimum' => ["$summer 10:50", $address, $cooking45, "$summer 11:34", '11:35'],
-            'hour rollover: exactly minimum' => ["$summer 10:50", $address, $cooking45, "$summer 11:35", null],
+            // seconds of "now" are dropped, so the next minute is accepted
+            'seconds: next minute' => ["$summer 10:02:30", $address, [], "$summer 10:03", null],
+            'seconds: current minute' => ["$summer 10:02:30", $address, [], "$summer 10:02", '10:03'],
 
-            // the configured value is used, not a fixed 1 minute
-            'value is honoured' => ["$summer 10:02", $address, ['minCookingTime' => 120], "$summer 11:00", '12:02'],
+            // minimum cooking time is enforced by the clients, not by the server
+            'minCookingTime is ignored' => ["$summer 10:02", $address, ['minCookingTime' => 45], "$summer 10:10", null],
+            'deliveryDuration is ignored' => ["$summer 10:02", $address, ['deliveryDuration' => [1 => '45 хв', 2 => '45 min']], "$summer 10:10", null],
 
-            // seconds of "now" are dropped, so the minimum the customer was shown is accepted
-            'seconds: exactly minimum' => ["$summer 10:02:30", $address, $cooking45, "$summer 10:47", null],
-            'seconds: before minimum' => ["$summer 10:02:30", $address, $cooking45, "$summer 10:46", '10:47'],
-
-            // shapes of the setting as saved by SettingForm
-            'string value' => ["$summer 10:02", $address, ['minCookingTime' => '45'], "$summer 10:46", '10:47'],
-            'empty value is skipped' => ["$summer 10:02", $address, ['minCookingTime' => ''], "$summer 10:03", null],
-            'zero is skipped' => ["$summer 10:02", $address, ['minCookingTime' => 0], "$summer 10:03", null],
-            'missing setting is skipped' => ["$summer 10:02", $address, [], "$summer 10:03", null],
-
-            // deliveryDuration is display text and does not affect validation
-            'deliveryDuration is ignored' => [
-                "$summer 10:02",
-                $address,
-                ['minCookingTime' => 30, 'deliveryDuration' => [1 => '45-60 хв', 2 => '45-60 min']],
-                "$summer 10:32",
-                null,
-            ],
-
-            // self picking uses its own setting
-            'self picking: before minimum' => ["$summer 10:02", $pickup, ['minCookingTimeSelfPickup' => 15], "$summer 10:16", '10:17'],
-            'self picking: exactly minimum' => ["$summer 10:02", $pickup, ['minCookingTimeSelfPickup' => 15], "$summer 10:17", null],
-            'self picking ignores minCookingTime' => ["$summer 10:02", $pickup, $cooking45, "$summer 10:10", null],
-            'address ignores minCookingTimeSelfPickup' => ["$summer 10:02", $address, ['minCookingTimeSelfPickup' => 45], "$summer 10:10", null],
+            // self picking has no minimum
+            'self picking: no minimum' => ["$summer 10:02", $pickup, ['minCookingTimeSelfPickup' => 15], "$summer 10:03", null],
         ];
     }
 }
