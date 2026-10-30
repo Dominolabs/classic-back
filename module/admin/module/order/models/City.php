@@ -180,7 +180,6 @@ class City extends ActiveRecord
             ->leftJoin(CityDescription::tableName() . ' AS cd2', 'c.id = cd2.city_id AND cd2.language_id = '
                 . Language::getLanguageIdByCode(Yii::$app->urlManager->getDefaultLanguage()))
             ->where(['c.status' => $status])
-            ->groupBy('cd.city_id')
             ->orderBy($order)
             ->limit($limit);
 
