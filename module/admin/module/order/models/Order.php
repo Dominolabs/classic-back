@@ -80,6 +80,12 @@ class Order extends ActiveRecord
     const DELIVERY_TYPE_ADDRESS = 2;
     const DELIVERY_TYPE_SELF_PICKING = 1;
 
+    /**
+     * Only guards against a delivery time in the past. The minimum cooking time
+     * (minCookingTime) is enforced by the clients.
+     */
+    const MIN_ADDRESS_DELIVERY_LEAD_MINUTES = 1;
+
     public const PAYMENT_STATUS_NOT_PAID = 0;
     public const PAYMENT_STATUS_PAID = 1;
 
@@ -652,14 +658,10 @@ class Order extends ActiveRecord
         }
 
         if ($this->delivery_type === static::DELIVERY_TYPE_ADDRESS) {
-            $time = Carbon::createFromTimestamp($this->$attribute);
-            if (!empty(Yii::$app->params['deliveryDuration'])) {
-                $minTime = Carbon::now()->addMinutes((int) (preg_replace('/[^0-9]/', '', Yii::$app->params['deliveryDuration'])));
-                $minTime = Carbon::today('GMT+2')->addHours($minTime->format('H'))->addMinutes($minTime->format('m'));
-                if ($minTime->diffInMinutes($time, false) < 0) {
-                    $this->addError($attribute, T::t('validation', "Time cannot be earlier than today ") . $minTime->toTimeString());
-                    return;
-                }
+            $minTime = Carbon::now('Europe/Kyiv')->startOfMinute()->addMinutes(static::MIN_ADDRESS_DELIVERY_LEAD_MINUTES);
+            if ($time->lt($minTime)) {
+                $this->addError($attribute, T::t('validation', "Time cannot be earlier than today ") . $minTime->format('H:i'));
+                return;
             }
         }
     }
