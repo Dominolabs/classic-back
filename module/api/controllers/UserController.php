@@ -267,11 +267,13 @@ class UserController extends BaseApiController
 
         /* @var User|ImageBehavior $user */
         $user = User::findOne(['auth_key' => Yii::$app->request->headers->get('Auth-Key')]);
-        if(Yii::$app->request->post() && strlen(Yii::$app->request->post()['phone']) != 12) {
-            Yii::$app->response->statusCode = 403;
+        if(Yii::$app->request->post() && strlen((string)Yii::$app->request->post('phone')) != 12) {
+            Yii::$app->response->statusCode = 422;
             return [
-                'status' => 'validation error',
-                'message' => 'Номер телефону повинен містити 12 символів.'
+                'status' => 'error',
+                'errors' => [
+                    'phone' => 'Номер телефону повинен містити 12 символів.',
+                ],
             ];
         }
 
@@ -287,8 +289,10 @@ class UserController extends BaseApiController
                 if($validatePhone && ($validatePhone->user_id != $user->user_id)) {
                     Yii::$app->response->statusCode = 422;
                     return [
-                        'status' => 'validation error',
-                        'message' => Yii::t('api', 'Цей номер телефону вже використовується.')
+                        'status' => 'error',
+                        'errors' => [
+                            'phone' => Yii::t('api', 'Цей номер телефону вже використовується.'),
+                        ],
                     ];
                 }
 
